@@ -20,6 +20,7 @@ class LoginController extends Controller
 
         return response([
                 'status' => 'Success.',
+                'user' => auth()->user(),
                 'authorization' => [
                     'token' => $token,
                     'type' => 'bearer',

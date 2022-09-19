@@ -54,7 +54,9 @@ class AuthTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonStructure([
-                'status', 'authorization'
+                'user',
+                'status', 
+                'authorization'
             ]);
     }
 
