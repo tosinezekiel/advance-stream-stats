@@ -29,6 +29,9 @@ export const auth = {
   getters:{
     isLoggedIn(state){
       return state.status.loggedIn
+    },
+    getUser(state){
+      return state.user
     }
   },
   mutations: {

@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../Pages/Auth/Login.vue'
 import Pricing from '../Pages/Pricing.vue'
 import Dashboard from '../Pages/Dashboard.vue'
+import Settings from '../Pages/Settings.vue'
 import store from '../store'
 
 const routes = [
@@ -20,6 +21,11 @@ const routes = [
         path: '/pricing',
         name: 'Pricing',
         component: Pricing
+    },
+    {
+        path: '/settings',
+        name: 'Settings',
+        component: Settings
     }
 ]
 
