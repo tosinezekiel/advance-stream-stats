@@ -28,7 +28,7 @@
 
                     <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Subsciptions</a>
 
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
+                    <a href="#" @click.prevent="handleLogout" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
                 </div>
             </div>
             </div>
@@ -40,9 +40,20 @@
 
 <script setup>
 import { reactive } from "@vue/reactivity"
+import { useStore } from 'vuex';
+import { useRouter} from 'vue-router'
+
+const store = useStore()
+const router = useRouter();
 
     const state = reactive({toggle:false})
     const toggle = () => {
         state.toggle = !state.toggle
+    }
+
+    const handleLogout = () => {
+        store.dispatch("auth/logout", {}).then(() => {
+            router.push("/login");
+        });
     }
 </script>

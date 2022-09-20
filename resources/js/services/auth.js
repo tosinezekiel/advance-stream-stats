@@ -4,8 +4,8 @@ import TokenService from "./token";
 const API_URL = 'http://advance-stream-stats.test/api';
 
 class Auth {
-   login({ email, password }) {
-    return api
+   async login({ email, password }) {
+    await api
       .post(`${API_URL}/auth/login`, {
         email,
         password
@@ -20,8 +20,17 @@ class Auth {
       });
   }
 
-  logout() {
-    TokenService.removeUser();
+  async logout() {
+    await api
+      .post(`${API_URL}/auth/logout`, {})
+      .then((response) => {
+        if (response.data.status) {
+          TokenService.removeUser();
+        }
+
+        return response.data;
+      });
+    
   }
 }
 

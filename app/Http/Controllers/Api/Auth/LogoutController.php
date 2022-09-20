@@ -13,7 +13,7 @@ class LogoutController extends Controller
     {
         Auth::logout();
         return response([
-            'status' => 'Success.',
+            'status' => true,
             'message' => 'Successfully logged out.',
         ], 200);
     }
