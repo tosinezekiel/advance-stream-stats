@@ -7,6 +7,7 @@ import setupInterceptors from './services/setupInterceptors';
 
 import Guest from './Layouts/Guest.vue';
 import Auth from './Layouts/Auth.vue';
+import Header from './Components/Header.vue';
 
 import {createApp} from 'vue'
 
@@ -17,6 +18,6 @@ const app = createApp(App);
 
 setupInterceptors(store);
 
-app.component('Guest', Guest).component('Auth', Auth);
+app.component('Guest', Guest).component('Auth', Auth).component('Header', Header);
 
 app.use(router).use(store).mount("#app");

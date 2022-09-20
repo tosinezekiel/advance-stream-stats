@@ -26,6 +26,11 @@ export const auth = {
       commit('logout');
     },
   },
+  getters:{
+    isLoggedIn(state){
+      return state.status.loggedIn
+    }
+  },
   mutations: {
     loginSuccess(state, user) {
       state.status.loggedIn = true;

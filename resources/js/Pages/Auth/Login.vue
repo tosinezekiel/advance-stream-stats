@@ -36,38 +36,31 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { ref, reactive } from "vue";
 import { useStore } from 'vuex';
 import { useRouter} from 'vue-router'
 
-export default {
-  setup() {
-    const store = useStore()
-    const email = ref("");
-    const state = reactive({ errors: {}, loading: false })
-    const password = ref("");
-    const router = useRouter();
+const store = useStore()
+const router = useRouter();
 
-    return {
-        email,
-        password,
-        state,
-        handleSubmit () {
-            state.loading = !state.loading;
-            state.errors = {};
-            store.dispatch("auth/login", {
-                    "email": email.value, 
-                    "password" : password.value
-                }).then(() => {
-                    state.loading = false;
-                    router.push("/dashboard");
-                },(error) => {
-                state.loading = false;
-                state.errors = error.response.data.errors;
-            });
-        },
-    };
-  },
-};
+const email = ref("");
+const password = ref("");
+
+const state = reactive({ errors: {}, loading: false })
+
+const handleSubmit = () => {
+    state.loading = !state.loading;
+    state.errors = {};
+    store.dispatch("auth/login", {
+            "email": email.value, 
+            "password" : password.value
+        }).then(() => {
+            state.loading = false;
+            router.push("/dashboard");
+        },(error) => {
+        state.loading = false;
+        state.errors = error.response.data.errors;
+    });
+}
 </script>
