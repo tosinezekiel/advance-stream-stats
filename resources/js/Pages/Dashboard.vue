@@ -20,11 +20,12 @@
     import BlankStats from '../Components/BlankStats.vue'
     import { computed } from "vue"
     import { useStore } from 'vuex';
+    import TokenService from "@/services/token";
 
     const store = useStore()
 
     const displayName = computed(() => {
-        return store.getters['auth/getUser'].first_name
+        return TokenService.getUser().first_name
     })
 
 </script>

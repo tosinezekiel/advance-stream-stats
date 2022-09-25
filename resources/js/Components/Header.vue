@@ -41,6 +41,7 @@
     import { reactive, computed } from 'vue'
     import { useStore } from 'vuex';
     import { useRouter} from 'vue-router'
+    import TokenService from "@/services/token";
 
     const store = useStore()
     const router = useRouter();
@@ -51,12 +52,12 @@
     }
 
     const nameInitial = computed(() => {
-        return store.getters['auth/getUser'].first_name.toUpperCase().charAt(0)
+        return TokenService.getUser().first_name.toUpperCase().charAt(0)
     })
 
     const handleLogout = () => {
         store.dispatch("auth/logout", {}).then(() => {
-            router.push("/login");
+            router.push("/");
         });
     }
 </script>

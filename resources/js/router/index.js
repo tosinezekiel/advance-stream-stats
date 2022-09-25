@@ -34,9 +34,11 @@ const router = createRouter({ history: createWebHistory(), routes })
 router.beforeEach((to, from, next) => {
     if (to.name !== 'Login' && !store.getters['auth/isLoggedIn']) {
         next({ name: 'Login' })
+        return false
     }
     if(to.name == 'Login' && store.getters['auth/isLoggedIn']){
         next({ name: 'Dashboard' })
+        return false
     }
     else next()
 })

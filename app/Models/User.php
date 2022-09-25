@@ -3,15 +3,17 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Laravel\Sanctum\HasApiTokens;
+use App\Builders\SubscriptionBuilder;
+use Illuminate\Notifications\Notifiable;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+use App\Traits\Billable;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Billable;
 
     /**
      * The attributes that are mass assignable.
@@ -22,7 +24,10 @@ class User extends Authenticatable implements JWTSubject
         'first_name',
         'last_name',
         'email',
-        'password',
+        'password','braintree_id',
+        'paypal_email',
+        'card_brand',
+        'card_last_four'
     ];
 
     /**
@@ -63,5 +68,11 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class)->orderBy('created_at', 'desc');
+    }
+
 
 }

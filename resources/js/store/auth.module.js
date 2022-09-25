@@ -8,6 +8,14 @@ const initialState = user
 export const auth = {
   namespaced: true,
   state: initialState,
+  getters: {
+    isLoggedIn(state){
+      return state.status.loggedIn
+    },
+    getUser(state){
+      return state.user
+    }
+  },
   actions: {
     login({ commit }, user) {
       return AuthService.login(user).then(
@@ -25,14 +33,6 @@ export const auth = {
       AuthService.logout();
       commit('logout');
     },
-  },
-  getters:{
-    isLoggedIn(state){
-      return state.status.loggedIn
-    },
-    getUser(state){
-      return state.user
-    }
   },
   mutations: {
     loginSuccess(state, user) {

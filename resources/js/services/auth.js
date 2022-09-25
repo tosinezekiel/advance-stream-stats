@@ -4,7 +4,7 @@ import TokenService from "./token";
 const API_URL = 'http://advance-stream-stats.test/api';
 
 class Auth {
-   async login({ email, password }) {
+    async login({ email, password }) {
     await api
       .post(`${API_URL}/auth/login`, {
         email,
@@ -20,7 +20,7 @@ class Auth {
       });
   }
 
-  async logout() {
+   async logout() {
     await api
       .post(`${API_URL}/auth/logout`, {})
       .then((response) => {

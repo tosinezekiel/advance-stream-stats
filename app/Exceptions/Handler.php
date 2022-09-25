@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Braintree\Exception\NotFound as BraintreeNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -45,6 +46,14 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+        $this->renderable(function (Throwable $e, $request) {
+            if ($e instanceof BraintreeNotFoundException) {
+                return response()->json(['error' => $e->getMessage()], 404);
+            }else{
+                return response()->json(['error' => "Something went wrong: {$e->getMessage()} ."], 500);
+            }
         });
     }
 }

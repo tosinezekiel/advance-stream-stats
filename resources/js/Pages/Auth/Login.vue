@@ -17,7 +17,7 @@
                     <label for="password" class="block text-sm font-medium mb-1">
                         Password
                     </label>
-                    <input v-model="password" class="pl-3 h-12 block w-full max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"/>
+                    <input v-model="password" type="password" class="pl-3 h-12 block w-full max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"/>
                     <span class="text-xs text-red-600" v-if="state.errors.hasOwnProperty('password')">
                         {{ state.errors.password[0] }}
                     </span>
