@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\LoginRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -20,7 +21,7 @@ class LoginController extends Controller
 
         return response([
                 'status' => 'Success.',
-                'user' => auth()->user(),
+                'user' => new UserResource(auth()->user()),
                 'authorization' => [
                     'token' => $token,
                     'type' => 'bearer',

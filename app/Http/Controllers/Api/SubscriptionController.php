@@ -8,7 +8,7 @@ use App\Services\TokenService;
 use App\Http\Controllers\Controller;
 use App\Services\SubscriptionService;
 use App\Http\Requests\SubscriptionRequest;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Response;
 
 class SubscriptionController extends Controller
 {
@@ -20,16 +20,16 @@ class SubscriptionController extends Controller
         $this->tokenService = $tokenService;
     }
 
-    public function index() 
+    public function index() : Response
     {
-        $plans = $this->subscriptionService->plans();
+        $subscriptions = $this->subscriptionService->getSubscriptions();
         return response([
-            'plans' => $plans, 
+            'subscriptions' => $subscriptions, 
             'status' => true
         ], 200);
     }
 
-    public function clientToken(Request $request) 
+    public function clientToken() : Response
     {
         $token = $this->tokenService->generateToken();
         return response([
@@ -38,7 +38,7 @@ class SubscriptionController extends Controller
         ], 200);
     }
 
-    public function create(SubscriptionRequest $request) 
+    public function create(SubscriptionRequest $request) : Response
     {
         $data = $request->validated();
         
@@ -54,7 +54,7 @@ class SubscriptionController extends Controller
         ], 200);
     }
 
-    public function destroy(Request $request) 
+    public function destroy(Request $request) : Response
     {
         $token = $this->subscriptionService->cancel();
         return response([

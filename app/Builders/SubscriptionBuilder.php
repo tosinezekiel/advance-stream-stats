@@ -8,6 +8,7 @@ use App\Models\User;
 use Braintree\Customer;
 use App\Models\Subscription;
 use App\Services\SubscriptionService;
+use Braintree;
 use Braintree\Exception\NotFound as BraintreeNotFoundException;
 
 class SubscriptionBuilder
@@ -80,7 +81,7 @@ class SubscriptionBuilder
         }
     }
 
-    protected function getBraintreeCustomer($token = null, array $options = [])
+    protected function getBraintreeCustomer($token = null, array $options = []) : Braintree\Customer
     {
         if (! $this->owner->braintree_id) {
             $customer = $this->owner->createAsBraintreeCustomer($token, $options);

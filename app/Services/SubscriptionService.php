@@ -1,11 +1,13 @@
 <?php
 namespace App\Services;
 
+use Braintree;
 use Exception;
 use App\Models\User;
-use Braintree;
 use Braintree\Gateway;
+use App\Models\Subscription;
 use Braintree\Exception\NotFound as BraintreeNotFoundException;
+use Illuminate\Database\Eloquent\Collection;
 
 class SubscriptionService{
 
@@ -20,13 +22,7 @@ class SubscriptionService{
         $this->gateway = BraintreeService::gateway();
     }
 
-    /**
-     * Get the Braintree plan that has the given ID.
-     *
-     * @param  string  $id
-     * @throws \Exception
-     */
-    public function findPlan($id)
+    public function findPlan(string $id) : Braintree\Plan
     {
         try {
             $plans = $this->gateway->plan()->all();
@@ -41,16 +37,22 @@ class SubscriptionService{
         }
     }
 
-    public function plans()
+    public function plans() : array
     {
         $plans = $this->gateway->plan()->all();
 
         return $plans;
     }
 
-    public function subscribe(User $user, string $token, string $subscription, Braintree\Plan $plan, string $type = 'monthly'){
+    public function subscribe(User $user, string $token, string $subscription, Braintree\Plan $plan, string $type = 'monthly') : Subscription
+    {
         $instance = $user->newSubscription($subscription, $plan->id);
         return $instance->create($token, [], self::determinePlanOptions($plan, $type));
+    }
+    public function getSubscriptions() : Collection
+    {
+        $user = User::where('id', auth()->user()->id)->first();
+        return $user->subscriptions();
     }
 
     public function createAsBraintreeSubscription(array $payload) : Braintree\Result\Successful

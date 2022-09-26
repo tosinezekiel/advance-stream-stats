@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 
 class UserController extends Controller
 {
@@ -12,8 +12,8 @@ class UserController extends Controller
     {
         $user = auth()->user();
         return response([
-            'status' => 'Success.',
-            'data' => $user,
+            'status' => true,
+            'user' => new UserResource($user),
         ], 200);
     }
 }

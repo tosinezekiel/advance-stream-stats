@@ -1,12 +1,12 @@
 <template>
     <div>
         <div id="dropin-container"></div>
-        <div class="mx-auto max-w-2xl py-24 px-4 sm:px-6 lg:px-8" v-if="selectedPlan">
-            <span class="text-3xl italic" v-if="loading">Your subscription is in progress...</span>
-            <div class="sm:align-center sm:flex sm:flex-col" v-if="!loading">
+        <div class="mx-auto max-w-2xl py-24 px-4 sm:px-6 lg:px-8" v-if="state.selectedPlan">
+            <span class="text-3xl italic" v-if="state.processSubscription">Your subscription is in progress...</span>
+            <div class="sm:align-center sm:flex sm:flex-col" v-else>
                 <Payment 
-                    v-if="showDropIn"
-                    :authorization="token"
+                    v-if="state.showDropIn"
+                    :authorization="state.token"
                     :paypal="{flow: 'vault'}"
                     @load="onLoad"
                     @loadFail="onLoadFail"
@@ -22,13 +22,13 @@
             </div>
         </div>
         <div class="bg-white" v-else>
-            <div class="mx-auto max-w-7xl py-24 px-4 sm:px-6 lg:px-8" v-if="plans.length">
+            <div class="mx-auto max-w-7xl py-24 px-4 sm:px-6 lg:px-8" v-if="state.plans.length">
                 <div class="sm:align-center sm:flex sm:flex-col">
                 <h1 class="text-5xl font-bold tracking-tight text-gray-900 sm:text-center">Pricing Plans</h1>
                 <p class="mt-5 text-xl text-gray-500 sm:text-center">Get unlimited access to live statistics on the go. Pro Account unlocks additional statistics.</p>
                 
                 </div>
-                <div class="flex mx-auto justify-center max-w-8xl mt-12" v-for="(plan, index) in plans">
+                <div class="flex mx-auto justify-center max-w-8xl mt-12" v-for="(plan, index) in state.plans">
                     <div class="p-6 border rounded-md mr-3">
                         <h2 class="text-lg font-medium leading-6 text-gray-900">Monthly</h2>
                         <p class="mt-4 text-sm text-gray-500">Access to all advance streams <br> statistics.</p>
@@ -58,78 +58,82 @@
         </div>
     </div>
 </template>
-<script>
-    import Payment from '../Components/Payment.vue'
-    import SubscriptionService from "@/services/subscription";
-export default {
-    components:{
-        Payment
-    },
-    data(){
-        return {
-            token: null,
-            instance: null,
-            showDropIn: false,
-            selectedPlan: null,
-            type: "monthly",
-            plans: [],
-            loading: false,
-            subscription: null
-        }
-    },
-    methods:{
-        selectPlan(plan, type){
-            this.getAuthorization()
-            this.selectedPlan = plan
-            this.type = type
-            this.showDropIn = true
-        },
-        onLoad (instance) {
-            this.instance = instance;
-        },
-        onLoadFail (instance) {
-            console.error('Load fail', instance);
-        },
-        onSuccess (payload) {
-            console.log(payload);
+<script setup>
+import { reactive, onMounted } from "vue";
+import { useRouter} from 'vue-router'
+import Payment from '../Components/Payment.vue'
+import SubscriptionService from "@/services/subscription";
 
-            const data = {
-                'token': payload.nonce,
-                'planId': this.selectedPlan.id,
-                'type': this.type
-            }
+    const router = useRouter();
 
-            SubscriptionService.subscribe(data).then((subscription) => {
-                console.log('Your subscription has started.');
-                this.loading = true;
-                return Promise.resolve(subscription);
-                },(error) => {
-                this.loading = false;
-                console.log("error from backend" + error)
-                return Promise.reject(error);
-            })
+    const state = reactive({
+        token: null,
+        instance: null,
+        showDropIn: false,
+        selectedPlan: null,
+        type: "monthly",
+        plans: [],
+        processSubscription: false,
+        subscription: null
+    })
 
-        },
-        onError (error) {
-            console.log('onError' + error);
-        },
-        clearPaymentSelection () {
-            if (this.instance != null) {
-                this.instance.clearSelectedPaymentMethod();
-            }
-        },
-        async getAuthorization(){
-            const token = SubscriptionService.getAuthorization();
-            this.token = await token
-        },
-        async getPlans(){
-            let data = SubscriptionService.getPlans()
-            this.plans = await data
-        },
-
-    },
-    mounted(){
-        this.getPlans();
+    function selectPlan(plan, type){
+        getAuthorization()
+        state.selectedPlan = plan
+        state.type = type
+        state.showDropIn = true
     }
-}
+
+    function onLoad (instance) {
+        state.instance = instance;
+    }
+
+    function onLoadFail (instance) {
+        console.error('Load fail', instance);
+    }
+
+    function onSuccess (payload) {
+        const data = {
+            'token': payload.nonce,
+            'planId': state.selectedPlan.id,
+            'type': state.type
+        }
+
+        state.processSubscription = true;
+        SubscriptionService.subscribe(data).then((subscription) => {
+            console.log('Your subscription has started.');
+            state.processSubscription = true;
+            return Promise.resolve(subscription);
+            },(error) => {
+            state.processSubscription = false;
+            console.log("error from backend" + error)
+            return Promise.reject(error);
+        })
+
+    }
+
+    function onError (error) {
+        console.log('onError' + error);
+    }
+
+    function clearPaymentSelection () {
+        if (state.instance != null) {
+            state.instance.clearSelectedPaymentMethod();
+        }
+    }
+
+    async function getAuthorization(){
+        const token = SubscriptionService.getAuthorization();
+        state.token = await token
+    }
+
+    async function getPlans(){
+        let data = SubscriptionService.getPlans()
+        state.plans = await data
+    }
+
+    onMounted(() => {
+        getPlans();
+    })
+
 </script>

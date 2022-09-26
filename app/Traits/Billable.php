@@ -9,10 +9,11 @@ use Braintree\PayPalAccount;
 use App\Services\BraintreeService;
 use App\Builders\SubscriptionBuilder;
 use App\Services\SubscriptionService;
+use Braintree;
 
 trait Billable{
 
-    public function braintreeGateway()
+    public function braintreeGateway() : Braintree\Gateway
     {
         return BraintreeService::gateway();
     }
@@ -23,7 +24,7 @@ trait Billable{
         return new SubscriptionBuilder($this, $subscription, $plan, $subscriptionService);
     }
     
-    public function paymentMethod()
+    public function paymentMethod() : Braintree\PaymentMethod
     {
         $customer = $this->asBraintreeCustomer();
 
@@ -35,7 +36,7 @@ trait Billable{
     }
     
 
-    public function updateCard($token, array $options = [])
+    public function updateCard(string $token, array $options = []) : void
     {
         $customer = $this->asBraintreeCustomer();
 
@@ -67,13 +68,7 @@ trait Billable{
         );
     }
 
-    /**
-     * Update the payment method token for all of the model's subscriptions.
-     *
-     * @param  string  $token
-     * @return void
-     */
-    protected function updateSubscriptionsToPaymentMethod($token)
+    protected function updateSubscriptionsToPaymentMethod(string $token) : void
     {
         foreach ($this->subscriptions as $subscription) {
             if ($subscription->active()) {
@@ -85,7 +80,7 @@ trait Billable{
     }
 
 
-    public function createAsBraintreeCustomer($token, array $options = [])
+    public function createAsBraintreeCustomer($token, array $options = []) : Braintree\Customer
     {
         $response = $this->braintreeGateway()->customer()->create(
             array_replace_recursive([
@@ -132,7 +127,7 @@ trait Billable{
         }
     }
 
-    public function subscription(string $subscription = 'default') : Subscription
+    public function subscription(string $subscription = 'default') : ?Subscription
     {
         return $this->subscriptions->sortByDesc(function ($value) {
             return $value->created_at->getTimestamp();
