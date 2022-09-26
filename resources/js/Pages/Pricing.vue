@@ -100,14 +100,15 @@ import SubscriptionService from "@/services/subscription";
         }
 
         state.processSubscription = true;
-        SubscriptionService.subscribe(data).then((subscription) => {
+        SubscriptionService.subscribe(data).then((response) => {
             console.log('Your subscription has started.');
-            state.processSubscription = true;
-            return Promise.resolve(subscription);
+                Promise.resolve(response);
+                state.processSubscription = true;
+                router.push("/settings");
             },(error) => {
-            state.processSubscription = false;
-            console.log("error from backend" + error)
-            return Promise.reject(error);
+                state.processSubscription = false;
+                alert("ERROR: Failed to subscribe, " + error)
+                Promise.reject(error);
         })
 
     }

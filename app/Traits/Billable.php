@@ -5,8 +5,8 @@ namespace App\Traits;
 use Exception;
 use App\Models\Subscription;
 use Braintree\Exception\NotFound as BraintreeNotFoundException;
-use Braintree\PayPalAccount;
 use App\Services\BraintreeService;
+use Braintree\PayPalAccount;
 use App\Builders\SubscriptionBuilder;
 use App\Services\SubscriptionService;
 use Braintree;
@@ -24,7 +24,7 @@ trait Billable{
         return new SubscriptionBuilder($this, $subscription, $plan, $subscriptionService);
     }
     
-    public function paymentMethod() : Braintree\PaymentMethod
+    public function paymentMethod() 
     {
         $customer = $this->asBraintreeCustomer();
 
@@ -106,7 +106,7 @@ trait Billable{
 
         $paypalAccount = $paymentMethod instanceof PayPalAccount;
 
-        $this->forceFill([
+        $this->fill([
             'braintree_id' => $response->customer->id,
             'paypal_email' => $paypalAccount ? $paymentMethod->email : null,
             'card_brand' => ! $paypalAccount ? $paymentMethod->cardType : null,
@@ -129,7 +129,7 @@ trait Billable{
 
     public function subscription(string $subscription = 'default') : ?Subscription
     {
-        return $this->subscriptions->sortByDesc(function ($value) {
+        return $this->subscriptions->where('status', 'Active')->sortByDesc(function ($value) {
             return $value->created_at->getTimestamp();
         })->first(function ($value) use ($subscription) {
             return $value->name === $subscription;

@@ -24,7 +24,7 @@ class Subscription {
       return api.get(`${API_URL}/plans`)
         .then((response) => {
           if (response.data.status) {
-              return plans = response.data.plans;
+              plans = response.data.plans;
           }
 
           return plans;
@@ -32,14 +32,24 @@ class Subscription {
     }
 
     subscribe(data) {
-      let plans = [];
       return api.post(`${API_URL}/subscriptions`, JSON.stringify(data))
         .then((response) => {
           if (response.data.status) {
-              return plans = response.data.plans;
+            TokenService.setUser(response.data.user);
           }
 
-          return plans;
+          return response.data;
+        });
+    }
+
+    cancel(subscription) {
+      return api.delete(`${API_URL}/subscriptions/${subscription}`)
+        .then((response) => {
+          if (response.data.status) {
+            TokenService.setUser(response.data.user);
+          }
+
+          return response.data;
         });
     }
 }

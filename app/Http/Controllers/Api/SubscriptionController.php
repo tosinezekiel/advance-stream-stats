@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
+use App\Models\Subscription;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Services\TokenService;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Services\SubscriptionService;
 use App\Http\Requests\SubscriptionRequest;
-use Illuminate\Http\Response;
 
 class SubscriptionController extends Controller
 {
@@ -49,15 +51,16 @@ class SubscriptionController extends Controller
 
         return response([
             'message' => 'Subscription created successfully',
-            'subscription' => $subscription, 
+            'user' => new UserResource(auth()->user()), 
             'status' => true
         ], 200);
     }
 
-    public function destroy(Request $request) : Response
+    public function destroy(Subscription $subscription) : Response
     {
-        $token = $this->subscriptionService->cancel();
+        $result = $this->subscriptionService->cancel($subscription);
         return response([
+            'user' => new UserResource(auth()->user()), 
             'message' => "Subscription cancelled successfully.", 
             'status' => true
         ], 200);

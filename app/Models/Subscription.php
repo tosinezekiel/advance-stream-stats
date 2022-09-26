@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Exception;
 use Carbon\Carbon;
+use App\Services\BraintreeService;
 use Illuminate\Database\Eloquent\Model;
-use Braintree\Subscription as BraintreeSubscription;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Braintree\Exception\NotFound as BraintreeNotFoundException;
 
 class Subscription extends Model
 {
@@ -16,6 +18,11 @@ class Subscription extends Model
     protected $dates = [
         'ends_at',
     ];
+
+    public function braintreeGateway() : \Braintree\Gateway
+    {
+        return BraintreeService::gateway();
+    }
 
     public function isActive() : bool
     {
@@ -32,34 +39,32 @@ class Subscription extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function cancel() : self
-    {
-        $subscription = $this->asBraintreeSubscription();
-
-        BraintreeSubscription::update($subscription->id, [
-            'numberOfBillingCycles' => $subscription->currentBillingCycle,
-        ]);
-
-        $this->ends_at = $subscription->billingPeriodEndDate;
-
-        $this->save();
-
-        return $this;
-    }
 
     public function cancelNow() : self
     {
         $subscription = $this->asBraintreeSubscription();
 
-        BraintreeSubscription::cancel($subscription->id);
+        $this->braintreeGateway()->subscription()->cancel($subscription->id);
 
         $this->markAsCancelled();
 
         return $this;
     }
 
+    public function asBraintreeSubscription() 
+    {
+        try{
+            return $this->braintreeGateway()->subscription()->find($this->braintree_id);
+        }catch(BraintreeNotFoundException $e){
+            throw new Exception('Unable to find Braintree subscription: '.$e->getMessage());
+        }
+    }
+
     public function markAsCancelled() : void
     {
-        $this->fill(['ends_at' => Carbon::now()])->save();
+        $this->fill([
+            'ends_at' => Carbon::now(),
+            'status' => 'cancelled'
+        ])->save();
     }
 }

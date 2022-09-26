@@ -60,8 +60,9 @@ class SubscriptionService{
         return $this->gateway->subscription()->create($payload);
     }
 
-    public function cancel(){
-        
+    public function cancel(Subscription $subscription) : Subscription
+    {
+        return $subscription->cancelNow();
     }
 
     public static function determinePlanOptions(Braintree\Plan $plan, string $type) : array

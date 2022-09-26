@@ -27,5 +27,5 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('/plans', [PlanController::class, 'index']);
     Route::get('/subscriptions', [SubscriptionController::class, 'index']);
     Route::post('/subscriptions', [SubscriptionController::class, 'create']);
-    Route::delete('/subscriptions', [SubscriptionController::class, 'destroy']);
+    Route::delete('/subscriptions/{subscription}', [SubscriptionController::class, 'destroy']);
 });

@@ -20,7 +20,7 @@ class UserResource extends JsonResource
             'last_name' => $this->last_name,
             'email' => $this->email,
             'subscriptions' => $request->user()->subscriptions ?? [],
-            'subscribed' => $request->user()->subscribed('default') ? true : false,
+            'subscribed' => $request->user()->subscribed(),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

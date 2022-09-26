@@ -1,10 +1,10 @@
 <template>
     <div class="mt-20">
-        <h1 class="text-3xl font-semibold">Subscription</h1>
-            <Plans />
+        <h1 class="text-3xl font-semibold mb-10">Settings</h1>
+            <Subscriptions />
     </div>
 </template>
 
 <script setup>
-   import Plans from '../Components/Plans.vue'
+   import Subscriptions from '../Components/Subscriptions.vue'
 </script>
