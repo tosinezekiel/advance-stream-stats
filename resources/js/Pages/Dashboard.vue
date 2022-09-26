@@ -11,7 +11,8 @@
             Pro Stats 
             <span class="ml-2 inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">Pro users only</span>
         </h3>
-        <BlankStats />
+        <BlankStats v-if="!isSubscribed" />
+        <ProStats v-if="isSubscribed" />
     </div>
 </template>
 <script setup>
@@ -26,6 +27,10 @@
 
     const displayName = computed(() => {
         return TokenService.getUser().first_name
+    })
+
+    const isSubscribed = computed(() => {
+        return TokenService.getUser().subscribed
     })
 
 </script>

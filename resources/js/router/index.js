@@ -40,6 +40,10 @@ router.beforeEach((to, from, next) => {
         next({ name: 'Dashboard' })
         return false
     }
+    if(to.name == 'Pricing' && store.getters['auth/isSubscribed']){
+        next({ name: 'Settings' })
+        return false
+    }
     else next()
 })
 

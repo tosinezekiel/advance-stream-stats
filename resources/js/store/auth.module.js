@@ -14,6 +14,9 @@ export const auth = {
     },
     getUser(state){
       return state.user
+    },
+    isSubscribed(state){
+      return state.user.subscribed
     }
   },
   actions: {
