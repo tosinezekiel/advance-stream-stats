@@ -20,10 +20,7 @@
     import ProStats from '../Components/ProStats.vue'
     import BlankStats from '../Components/BlankStats.vue'
     import { computed } from "vue"
-    import { useStore } from 'vuex';
     import TokenService from "@/services/token";
-
-    const store = useStore()
 
     const displayName = computed(() => {
         return TokenService.getUser().first_name
