@@ -1,5 +1,6 @@
 import AuthService from '../services/auth';
 import UserService from '../services/user';
+import SubscriptionService from '../services/subscription';
 
 const user = JSON.parse(localStorage.getItem('user'));
 const initialState = user
@@ -18,6 +19,9 @@ export const auth = {
     },
     isSubscribed(state){
       return state.user.subscribed
+    },
+    getSubscriptions(state){
+      return state.user.subscriptions
     }
   },
   actions: {
@@ -48,6 +52,17 @@ export const auth = {
         }
       );
     },
+    cancel({ commit }, subscription) {
+      return SubscriptionService.cancel(subscription).then(
+        user => {
+          commit('loginSuccess', user);
+          return Promise.resolve(user);
+        },
+        error => {
+          return Promise.reject(error);
+        }
+      );
+    }
   },
   mutations: {
     loginSuccess(state, user) {
@@ -61,6 +76,6 @@ export const auth = {
     logout(state) {
       state.status.loggedIn = false;
       state.user = null;
-    },
+    }
   }
 };

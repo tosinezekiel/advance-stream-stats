@@ -28,28 +28,16 @@
                 <p class="mt-5 text-xl text-gray-500 sm:text-center">Get unlimited access to live statistics on the go. Pro Account unlocks additional statistics.</p>
                 
                 </div>
-                <div class="flex mx-auto justify-center max-w-8xl mt-12" v-for="(plan, index) in state.plans">
-                    <div class="p-6 border rounded-md mr-3">
-                        <h2 class="text-lg font-medium leading-6 text-gray-900">Monthly</h2>
+                <div class="flex mx-auto justify-center max-w-8xl mt-12">
+                    <div class="p-6 border rounded-md mr-3" v-for="(plan, index) in state.plans">
+                        <h2 class="text-lg font-medium leading-6 text-gray-900 capitalize">{{ plan.name }}</h2>
                         <p class="mt-4 text-sm text-gray-500">Access to all advance streams <br> statistics.</p>
                         <p class="mt-8">
-                            <span class="text-xl font-light text-gray-900">Starting at</span><br>
+                            <span class="text-xl font-light text-gray-900">{{ plan.name == 'monthly' ? `Starting at` :  `Get up to 40% off on` }}</span><br>
                             <span class="text-4xl font-bold tracking-tight text-gray-900">${{ plan.price }}</span>
-                            <span class="text-base font-medium text-gray-500">/mo</span>
+                            <span class="text-base font-medium text-gray-500">/{{ plan.name == 'monthly' ? `mo` :  `yr` }}</span>
                         </p>
-                        <button @click="selectPlan(plan, 'monthly')" class="mt-8 block w-full rounded-md border border-gray-800 bg-gray-800 py-2 text-center text-sm font-semibold text-white hover:bg-gray-900">
-                            Subscribe
-                        </button>      
-                    </div>
-                    <div class="p-6 border rounded-md mr-3">
-                        <h2 class="text-lg font-medium leading-6 text-gray-900">Annually</h2>
-                        <p class="mt-4 text-sm text-gray-500">Access to all advance streams <br> statistics.</p>
-                        <p class="mt-8">
-                            <span class="text-xl font-light text-gray-900">Get up to 40% off on</span><br>
-                            <span class="text-4xl font-bold tracking-tight text-gray-900">${{ plan.price * 12 }}</span>
-                            <span class="text-base font-medium text-gray-500">/yr</span>
-                        </p>
-                        <button @click="selectPlan(plan, 'yearly')" class="mt-8 block w-full rounded-md border border-gray-800 bg-gray-800 py-2 text-center text-sm font-semibold text-white hover:bg-gray-900">
+                        <button @click="selectPlan(plan, plan.name)" class="mt-8 block w-full rounded-md border border-gray-800 bg-gray-800 py-2 text-center text-sm font-semibold text-white hover:bg-gray-900">
                             Subscribe
                         </button>      
                     </div>
@@ -78,7 +66,6 @@ import SubscriptionService from "@/services/subscription";
     })
 
     function selectPlan(plan, type){
-        getAuthorization()
         state.selectedPlan = plan
         state.type = type
         state.showDropIn = true
@@ -104,10 +91,12 @@ import SubscriptionService from "@/services/subscription";
             console.log('Your subscription has started.');
                 Promise.resolve(response);
                 state.processSubscription = true;
+                router.go();
                 router.push("/settings");
             },(error) => {
                 state.processSubscription = false;
-                alert("ERROR: Failed to subscribe, " + error)
+                console.log(error.response.data.error)
+                alert(error.response.data.error)
                 Promise.reject(error);
         })
 
@@ -135,6 +124,7 @@ import SubscriptionService from "@/services/subscription";
 
     onMounted(() => {
         getPlans();
+        getAuthorization();
     })
 
 </script>

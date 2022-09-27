@@ -25,6 +25,7 @@ class Subscription {
         .then((response) => {
           if (response.data.status) {
               plans = response.data.plans;
+              return plans;
           }
 
           return plans;

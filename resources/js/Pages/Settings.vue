@@ -6,5 +6,5 @@
 </template>
 
 <script setup>
-   import Subscriptions from '../Components/Subscriptions.vue'
+    import Subscriptions from '../Components/Subscriptions.vue'
 </script>

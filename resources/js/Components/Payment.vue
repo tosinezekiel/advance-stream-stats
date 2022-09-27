@@ -46,20 +46,15 @@ export default {
     };
   },
   mounted() {
-    // Create config
-    console.log(this.authorization);
     let config = {
       authorization: this.authorization,
       container: this.$refs.dropin,
       locale: this.locale,
       paypal: this.paypal,
     };
-    // Create dropin
+
     dropIn.create(config, (createErr, instance) => {
       if (createErr) {
-        // An error in the create call is likely due to
-        // incorrect configuration values or network issues.
-        // An appropriate error will be shown in the UI.
         this.$emit("loadFail", createErr);
         return;
       }

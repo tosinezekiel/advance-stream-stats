@@ -71,7 +71,7 @@ trait Billable{
     protected function updateSubscriptionsToPaymentMethod(string $token) : void
     {
         foreach ($this->subscriptions as $subscription) {
-            if ($subscription->active()) {
+            if ($subscription->isActive()) {
                 $this->braintreeGateway()->customer()->update($subscription->braintree_id, [
                     'paymentMethodToken' => $token,
                 ]);

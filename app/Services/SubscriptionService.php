@@ -78,7 +78,6 @@ class SubscriptionService{
     {
         return [
             "price" => self::calculateDiscount((int) $plan->price),
-            "billingFrequency" => self::YEARLY_DURATION
         ];
     }
 

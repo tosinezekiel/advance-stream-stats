@@ -17,6 +17,12 @@ class Subscription extends Model
 
     protected $dates = [
         'ends_at',
+        'created_at'
+    ];
+
+    protected $casts = [
+        'created_at'  => 'date:Y-m-d',
+        'ends_at' => 'datetime:Y-m-d H:i:a',
     ];
 
     public function braintreeGateway() : \Braintree\Gateway
