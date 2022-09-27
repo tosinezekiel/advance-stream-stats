@@ -15,14 +15,6 @@ These are the steps to get the app up and running. Once you're using the app.
 6. Run migrations: `php artisan migrate --seed`
 9. Run `php artisan test`
 
-Route::post('/auth/refreshtoken', [UserController::class, 'refreshToken']);
-    Route::post('/auth/logout', [LogoutController::class, 'logout']);
-    Route::get('/auth/token/generate', [SubscriptionController::class, 'clientToken']);
-    Route::get('/plans', [PlanController::class, 'index']);
-    Route::get('/subscriptions', [SubscriptionController::class, 'index']);
-    Route::post('/subscriptions', [SubscriptionController::class, 'create']);
-    Route::delete('/subscriptions/{subscription}', [SubscriptionController::class, 'destroy']);
-
 ## Request samples
 ```sh
 Login
