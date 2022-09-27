@@ -21,7 +21,6 @@ class UserController extends Controller
 
     public function refreshToken(Request $request) : Response
     {
-        \Log::info($request->refreshToken);
         if (!$token = auth('api')->refresh()) {
             return response([
                 'status' => 'Error.',
