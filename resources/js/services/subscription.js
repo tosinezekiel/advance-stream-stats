@@ -36,10 +36,13 @@ class Subscription {
       return api.post(`${API_URL}/subscriptions`, JSON.stringify(data))
         .then((response) => {
           if (response.data.status) {
+            const token = TokenService.getLocalAccessToken();
             TokenService.setUser(response.data.user);
+            TokenService.updateLocalAccessToken(token);
+            return TokenService.getUser();
           }
 
-          return response.data;
+          return TokenService.getUser();
         });
     }
 
@@ -47,10 +50,13 @@ class Subscription {
       return api.delete(`${API_URL}/subscriptions/${subscription}`)
         .then((response) => {
           if (response.data.status) {
+            const token = TokenService.getLocalAccessToken();
             TokenService.setUser(response.data.user);
+            TokenService.updateLocalAccessToken(token);
+            return TokenService.getUser();
           }
 
-          return response.data;
+          return TokenService.getUser();
         });
     }
 }

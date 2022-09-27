@@ -22,6 +22,7 @@ Route::post('/auth/login', [LoginController::class, 'login']);
 
 Route::middleware(['auth:api'])->group(function () {
     Route::get('/user', [UserController::class, 'profile']);
+    Route::post('/auth/refreshtoken', [UserController::class, 'refreshToken']);
     Route::post('/auth/logout', [LogoutController::class, 'logout']);
     Route::get('/auth/token/generate', [SubscriptionController::class, 'clientToken']);
     Route::get('/plans', [PlanController::class, 'index']);

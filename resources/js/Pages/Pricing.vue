@@ -88,14 +88,12 @@ import SubscriptionService from "@/services/subscription";
 
         state.processSubscription = true;
         SubscriptionService.subscribe(data).then((response) => {
-            console.log('Your subscription has started.');
                 Promise.resolve(response);
                 state.processSubscription = true;
                 router.go();
                 router.push("/settings");
             },(error) => {
                 state.processSubscription = false;
-                console.log(error.response.data.error)
                 alert(error.response.data.error)
                 Promise.reject(error);
         })
@@ -103,7 +101,7 @@ import SubscriptionService from "@/services/subscription";
     }
 
     function onError (error) {
-        console.log('onError' + error);
+        
     }
 
     function clearPaymentSelection () {

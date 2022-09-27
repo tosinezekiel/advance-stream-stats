@@ -59,7 +59,6 @@ export default {
         return;
       }
       this.instance = instance;
-      console.log(this.instance)
       // Load event
       this.$emit("load", this.instance);
     });

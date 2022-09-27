@@ -18,10 +18,10 @@ export const auth = {
       return state.user
     },
     isSubscribed(state){
-      return state.user.subscribed
+      return state.user?.subscribed
     },
     getSubscriptions(state){
-      return state.user.subscriptions
+      return state.user?.subscriptions
     }
   },
   actions: {
@@ -62,6 +62,9 @@ export const auth = {
           return Promise.reject(error);
         }
       );
+    },
+    refreshToken({ commit }, accessToken) {
+      commit('refreshToken', accessToken);
     }
   },
   mutations: {
@@ -76,6 +79,10 @@ export const auth = {
     logout(state) {
       state.status.loggedIn = false;
       state.user = null;
+    },
+    refreshToken(state, accessToken) {
+      state.status.loggedIn = true;
+      state.user = { ...state.user, accessToken: accessToken };
     }
   }
 };

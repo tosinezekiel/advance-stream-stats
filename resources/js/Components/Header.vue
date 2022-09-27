@@ -25,7 +25,7 @@
                 </div>
                 <div v-if="state.toggle" class="absolute left-0 right-2 z-10 mt-2 w-48 origin-top-left rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
 
-                    <router-link to="/settings" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</router-link>
+                    <a @click.prevent="gotoSettings" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
 
                     <a href="#" @click.prevent="handleLogout" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
                 </div>
@@ -58,6 +58,11 @@
     const isSubscribed = computed(() => {
         return TokenService.getUser().subscribed
     })
+
+    const gotoSettings = () => {
+        // router.go();
+        router.push('/settings');
+    }
 
     const handleLogout = () => {
         store.dispatch("auth/logout", {}).then(() => {
