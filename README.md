@@ -1,5 +1,5 @@
 # Streamlabs task
-This application is aimed at providing stats to twitch streamers and more detailed analytics if they are subscribed to the service
+This application is aimed at demonstrating advance payment system using laravel and vue
 
 # Requirements
 ```sh
